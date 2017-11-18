@@ -41,3 +41,12 @@ function render(event){
     target.dispatchEvent(event);
     console.log('Отправлен запрос на сохранение коментария в базу данных');
 }
+/*
+ * Обработчик обнуляет поля ввода коментария
+ */
+window.addEventListener('dropFields', resetHandler, false);
+function resetHandler(){
+    header.value = '';
+    text.value = '';
+    console.log('Коментарий сброшен');
+}

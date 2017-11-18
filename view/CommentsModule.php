@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Модуль коментариев</title>
-    <script type="text/javascript" src=<?=ROOT.'/js/model.js'?>></script>
-    <script type="text/javascript" src=<?=ROOT.'/js/controller.js'?>></script>
-    <script type="text/javascript" src=<?=ROOT.'/js/view.js'?>></script>
+    <script type="text/javascript" src=<?php ROOT ?>'/js/controller.js'></script>
+    <script type="text/javascript" src=<?php ROOT ?>'/js/model.js'></script>
+    <script type="text/javascript" src=<?php ROOT ?>'/js/view.js'></script>
 </head>
 <body>
 <div class="js-input">
@@ -22,7 +22,7 @@
 </div>
 <div class="js-comment-wrapper">
     <!--Тут будут выводится коментарии-->
-    <?php foreach($result as $id => $comment): ?>
+    <?php foreach($list as $id => $comment): ?>
         <div class="comment_<?php echo $id; ?>">
             <h5 class="comment_header"><?php echo $comment['head']; ?></h5>
             <p class="comment_content"><?php echo $comment['content']; ?></p>

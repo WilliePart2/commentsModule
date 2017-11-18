@@ -1,5 +1,5 @@
 <?php
 return array (
-    "/" => "comments/commentsList",
-    "/ajax/" => "comments/write"
+    "/ajax/" => "comments/write",
+    "/" => "comments/commentsList"
 );

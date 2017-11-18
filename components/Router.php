@@ -15,9 +15,6 @@ class Router
     }
     public function run()
     {
-        if(isset($_SERVER['HTTP_X_REQUESTED_WITH'])){
-            echo $_SERVER['HTTP_X_REQUESTED_WITH']."<br/>";
-        }
         $uri = $this->getURI();
         foreach($this->routes as $uriPattern => $action){
             if(preg_match("~$uriPattern~", $uri)){
@@ -29,7 +26,19 @@ class Router
                 if(file_exists($controllerFile)){
                     require_once "$controllerFile";
                     $controllerObject = new $controllerName();
-                    $controllerObject->$actionName();
+                    if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest'){
+                        $_POST = json_decode(file_get_contents('php://input'), true);
+                        $head = $_POST['head'];
+                        $text = $_POST['text'];
+
+                        $result = $controllerObject->$actionName($head, $text);
+                    }
+                    else {
+                        $result = $controllerObject->$actionName();
+                    }
+                    if($result !== null){
+                        exit; // Заканчиваем выполнение скрипта. Тут сходятся все точки программы.
+                    }
                 }
             }
         }

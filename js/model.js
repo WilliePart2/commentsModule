@@ -38,11 +38,3 @@ function sendHandler(event){
     target.dispatchEvent(event);
     console.log('Коментарий отправлен');
 }
-/*
- * Обработчик обнуляет поля ввода коментария
- */
-function resetHandler(){
-    header.value = '';
-    text.value = '';
-    console.log('Коментарий сброшен');
-}

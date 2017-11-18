@@ -1,35 +1,30 @@
 <?php
 
+require_once(ROOT.'/model/modelComments.php');
 class controllerComments
 {
     public function actionCommentsList()
     {
-        $connect = Db::dbConnection();
-        $comments = Db::dbRead($connect);
-        $result = array();
-        $count = 0;
-        while($elt = $comments->fetch()){
-            $result[$count]['user'] = $elt['user'];
-            $result[$count]['head'] = $elt['head'];
-            $result[$count]['content'] = $elt['content'];
-        }
-        $connect = null; // Закрытие подключения к базе данных
+        $connect = new modelComments();
+        $list = $connect->read();
         // Подключить представление и вивести в него значения
         require_once ROOT."/view/CommentsModule.php";
+        if($list){
+            $connect = null; // Закрытие подключения к базе данных
+            return false;
+        }
+        else {
+            return false; // Коментарии кончились.
+        }
     }
     public function actionWrite($commentHead, $commentContent)
     {
-        if(isset($_SERVER['HTTP_X_REQUESTED_WITH'])){
-            $message = json_decode($_POST['message'], true);
+        $connect = new modelComments();
+        $query = $connect->write($commentHead, $commentContent);
+        if($query) {
+            $connect = null; // Закрытие подключения к базе данных
+            return true;
         }
-        $connect = Db::dbConnection();
-        $query = Db::dbWrite($connect, $commentHead, $commentContent);
-        if($query){
-            echo "Коментарий сохранен <br/>";
-        }
-        else {
-            echo "Комментарий не сохранет <br/>";
-        }
-        $connect = null; // Закрытие подключения к базе данных
+        // Возможно стоит использовать окончание выполнения программы через exit()/die()?
     }
 }

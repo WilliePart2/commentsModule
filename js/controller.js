@@ -21,16 +21,27 @@ function messageHandler(event){
 * Сохранение сообщения на сервере(нужен AJAX)
 */
 window.addEventListener('initSaveMessage', saveHandler, false);
-function saveHandler(){
+function saveHandler(event){
     var event = event || window.event;
     var target = event.target || event.srcElement; // Зачем я это сюда влепил?
+    var host = location.href + 'ajax/';
+    console.log(host);
     var xhr = new XMLHttpRequest();
-    xhr.open('/ajax/','POST');
+    xhr.open('POST',encodeURI(host), true);
     xhr.setRequestHeader('Content-Type','application/json');
+    xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest'); // Заголовок устанавливать обязательно!
     var message = JSON.stringify(event.detail);
+    console.log(message);
     xhr.send(message);
-    xhr.onreadyStateChange = function(){
-        if(xhr.readyState !== 4 && xhr.status !== 200){return;}
+    xhr.onreadystatechange = function(){
+        if((xhr.readyState !== 4) && (xhr.status !== 200)){return;}
+        var event = new CustomEvent('dropFields', {
+            'bubbles': true,
+            'cancelable': true
+        });
+        target.dispatchEvent(event);
+
+        console.log(xhr.responseText);
         console.log('Коментарий сохранен в базе данных');
     }
 }
